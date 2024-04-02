@@ -1,0 +1,17 @@
+[gd_scene load_steps=4 format=3 uid="uid://cklpdno32jqk7"]
+
+[ext_resource type="PackedScene" uid="uid://cgfpgk1xgqx7" path="res://scenes/scn_xr_player.tscn" id="2_b31ts"]
+[ext_resource type="AudioStream" uid="uid://brrv2fdjgn6n8" path="res://assets/audio_assets/piano mackey background.wav" id="3_362xt"]
+[ext_resource type="PackedScene" uid="uid://0xebqcpe12oh" path="res://scenes/scn_singularity.tscn" id="3_2845e"]
+
+[node name="world" type="Node3D"]
+
+[node name="player" parent="." instance=ExtResource("2_b31ts")]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0, 0.5)
+
+[node name="singularity" parent="." instance=ExtResource("3_2845e")]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 1, 0)
+
+[node name="BackgroundMusic" type="AudioStreamPlayer" parent="."]
+stream = ExtResource("3_362xt")
+autoplay = true

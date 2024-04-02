@@ -1,0 +1,191 @@
+[gd_scene load_steps=18 format=3 uid="uid://drnmkx4sy8bst"]
+
+[ext_resource type="Material" uid="uid://c4mwguhj2qvfl" path="res://assets/material_assets/mat_player_hands.tres" id="1_ff76g"]
+[ext_resource type="Script" path="res://scripts/sc_hand_menu.gd" id="1_q6mxd"]
+[ext_resource type="Material" uid="uid://dlr5w2wb6sv05" path="res://assets/material_assets/mat_disc.tres" id="2_omlhe"]
+[ext_resource type="PackedScene" uid="uid://cfhyarpcrwkkn" path="res://scenes/scn_xr_button.tscn" id="3_6c6ga"]
+[ext_resource type="Material" uid="uid://d27cfcd656fgx" path="res://assets/material_assets/mat_restart_sphere.tres" id="3_fivky"]
+[ext_resource type="Material" uid="uid://do2xl32ix4fm6" path="res://assets/material_assets/mat_exit_sphere.tres" id="4_asfmc"]
+
+[sub_resource type="Animation" id="Animation_dll60"]
+resource_name = "Menu Active"
+length = 0.2
+loop_mode = 1
+tracks/0/type = "value"
+tracks/0/imported = false
+tracks/0/enabled = true
+tracks/0/path = NodePath("Clock/Disc:rotation")
+tracks/0/interp = 1
+tracks/0/loop_wrap = true
+tracks/0/keys = {
+"times": PackedFloat32Array(0, 0.2),
+"transitions": PackedFloat32Array(1, 1),
+"update": 0,
+"values": [Vector3(0, 0, 0), Vector3(0, 6.28319, 0)]
+}
+
+[sub_resource type="Animation" id="Animation_7wyvh"]
+resource_name = "OpenMenu"
+length = 0.2
+
+[sub_resource type="Animation" id="Animation_d1d4s"]
+length = 0.001
+tracks/0/type = "value"
+tracks/0/imported = false
+tracks/0/enabled = true
+tracks/0/path = NodePath("Clock/Disc:rotation")
+tracks/0/interp = 1
+tracks/0/loop_wrap = true
+tracks/0/keys = {
+"times": PackedFloat32Array(0),
+"transitions": PackedFloat32Array(1),
+"update": 0,
+"values": [Vector3(0, 0, 0)]
+}
+
+[sub_resource type="AnimationLibrary" id="AnimationLibrary_nih0d"]
+_data = {
+"DiscSpin": SubResource("Animation_dll60"),
+"OpenMenu": SubResource("Animation_7wyvh"),
+"RESET": SubResource("Animation_d1d4s")
+}
+
+[sub_resource type="Animation" id="Animation_0g2f2"]
+resource_name = "OpenMenu"
+length = 0.3
+tracks/0/type = "value"
+tracks/0/imported = false
+tracks/0/enabled = true
+tracks/0/path = NodePath("Clock/PauseButton:position")
+tracks/0/interp = 1
+tracks/0/loop_wrap = true
+tracks/0/keys = {
+"times": PackedFloat32Array(0, 0.1),
+"transitions": PackedFloat32Array(1, 1),
+"update": 0,
+"values": [Vector3(0, -0.01, 0), Vector3(0, 0.01, 0)]
+}
+tracks/1/type = "value"
+tracks/1/imported = false
+tracks/1/enabled = true
+tracks/1/path = NodePath("Clock/ExitButton:position")
+tracks/1/interp = 1
+tracks/1/loop_wrap = true
+tracks/1/keys = {
+"times": PackedFloat32Array(0.1, 0.2),
+"transitions": PackedFloat32Array(1, 1),
+"update": 0,
+"values": [Vector3(0, -0.01, 0.03), Vector3(0, 0.01, 0.03)]
+}
+tracks/2/type = "value"
+tracks/2/imported = false
+tracks/2/enabled = true
+tracks/2/path = NodePath("Clock/RestartButton:position")
+tracks/2/interp = 1
+tracks/2/loop_wrap = true
+tracks/2/keys = {
+"times": PackedFloat32Array(0.2, 0.3),
+"transitions": PackedFloat32Array(1, 1),
+"update": 0,
+"values": [Vector3(0, -0.01, -0.03), Vector3(0, 0.01, -0.03)]
+}
+
+[sub_resource type="Animation" id="Animation_jn6rk"]
+length = 0.001
+tracks/0/type = "value"
+tracks/0/imported = false
+tracks/0/enabled = true
+tracks/0/path = NodePath("Clock/PauseButton:position")
+tracks/0/interp = 1
+tracks/0/loop_wrap = true
+tracks/0/keys = {
+"times": PackedFloat32Array(0),
+"transitions": PackedFloat32Array(1),
+"update": 0,
+"values": [Vector3(0, 0.01, 0)]
+}
+tracks/1/type = "value"
+tracks/1/imported = false
+tracks/1/enabled = true
+tracks/1/path = NodePath("Clock/ExitButton:position")
+tracks/1/interp = 1
+tracks/1/loop_wrap = true
+tracks/1/keys = {
+"times": PackedFloat32Array(0),
+"transitions": PackedFloat32Array(1),
+"update": 0,
+"values": [Vector3(0, 0.01, 0.03)]
+}
+tracks/2/type = "value"
+tracks/2/imported = false
+tracks/2/enabled = true
+tracks/2/path = NodePath("Clock/RestartButton:position")
+tracks/2/interp = 1
+tracks/2/loop_wrap = true
+tracks/2/keys = {
+"times": PackedFloat32Array(0),
+"transitions": PackedFloat32Array(1),
+"update": 0,
+"values": [Vector3(0, 0.01, -0.03)]
+}
+
+[sub_resource type="AnimationLibrary" id="AnimationLibrary_0fynr"]
+_data = {
+"OpenMenu": SubResource("Animation_0g2f2"),
+"RESET": SubResource("Animation_jn6rk")
+}
+
+[sub_resource type="BoxMesh" id="BoxMesh_e70t3"]
+material = ExtResource("2_omlhe")
+
+[sub_resource type="CapsuleMesh" id="CapsuleMesh_aov4a"]
+material = ExtResource("1_ff76g")
+
+[sub_resource type="SphereMesh" id="SphereMesh_bvhu1"]
+material = ExtResource("4_asfmc")
+
+[sub_resource type="SphereMesh" id="SphereMesh_11odq"]
+material = ExtResource("3_fivky")
+
+[node name="HandMenu" type="Node3D" groups=["menus"]]
+script = ExtResource("1_q6mxd")
+
+[node name="AnimationPlayerDisc" type="AnimationPlayer" parent="."]
+libraries = {
+"": SubResource("AnimationLibrary_nih0d")
+}
+
+[node name="AnimationPlayerMenu" type="AnimationPlayer" parent="."]
+libraries = {
+"": SubResource("AnimationLibrary_0fynr")
+}
+
+[node name="Clock" type="Node3D" parent="."]
+transform = Transform3D(1, 0, 0, 0, 0.984808, 0.173648, 0, -0.173648, 0.984808, 0, 0.02, 0.01)
+
+[node name="Disc" type="MeshInstance3D" parent="Clock"]
+transform = Transform3D(0.06, 0, 0, 0, 0.003, 0, 0, 0, 0.06, 0, 0, 0)
+visible = false
+mesh = SubResource("BoxMesh_e70t3")
+skeleton = NodePath("../..")
+
+[node name="ClockBand" type="MeshInstance3D" parent="Clock"]
+transform = Transform3D(0.067, 0, 0, 0, -2.79397e-09, 0.052, 0, -0.064, -1.86265e-09, 0, -0.025, -0.01)
+visible = false
+mesh = SubResource("CapsuleMesh_aov4a")
+
+[node name="PauseButton" parent="Clock" instance=ExtResource("3_6c6ga")]
+transform = Transform3D(0.01, 0, 0, 0, 0.01, -2.32831e-10, 0, 2.32831e-10, 0.01, 0, 0.01, 0)
+visible = false
+skeleton = NodePath("..")
+
+[node name="ExitButton" parent="Clock" instance=ExtResource("3_6c6ga")]
+transform = Transform3D(0.01, 0, 0, 0, 0.01, -2.32831e-10, 0, 2.32831e-10, 0.01, 0, 0.01, 0.03)
+mesh = SubResource("SphereMesh_bvhu1")
+skeleton = NodePath("..")
+
+[node name="RestartButton" parent="Clock" instance=ExtResource("3_6c6ga")]
+transform = Transform3D(0.01, 0, 0, 0, 0.01, -2.32831e-10, 0, 2.32831e-10, 0.01, 0, 0.01, -0.03)
+visible = false
+mesh = SubResource("SphereMesh_11odq")
+skeleton = NodePath("..")

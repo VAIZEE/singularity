@@ -1,0 +1,56 @@
+[gd_scene load_steps=7 format=3 uid="uid://cgfpgk1xgqx7"]
+
+[ext_resource type="PackedScene" uid="uid://d2q6p7tqfs47g" path="res://assets/model_assets/hand_models/hand_r.glb" id="1_rtu1f"]
+[ext_resource type="Script" path="res://scripts/sc_xr_player.gd" id="1_tm06o"]
+[ext_resource type="Script" path="res://scripts/sc_open_xr_hand_collision.gd" id="2_6fxvw"]
+[ext_resource type="Material" uid="uid://c4mwguhj2qvfl" path="res://assets/material_assets/mat_player_hands.tres" id="2_dbqgo"]
+[ext_resource type="PackedScene" uid="uid://stl8g2bo565n" path="res://assets/model_assets/hand_models/hand_l.glb" id="2_q7dcu"]
+
+[sub_resource type="SphereMesh" id="SphereMesh_4qtyj"]
+
+[node name="player" type="Node3D"]
+script = ExtResource("1_tm06o")
+
+[node name="XROrigin3D" type="XROrigin3D" parent="."]
+
+[node name="XRCamera3D" type="XRCamera3D" parent="XROrigin3D"]
+current = true
+
+[node name="XRControllerRight" type="XRController3D" parent="XROrigin3D"]
+visible = false
+tracker = &"right_hand"
+
+[node name="MeshInstance3D" type="MeshInstance3D" parent="XROrigin3D/XRControllerRight"]
+transform = Transform3D(0.1, 0, 0, 0, 0.1, 0, 0, 0, 0.1, 0, 0, 0)
+mesh = SubResource("SphereMesh_4qtyj")
+
+[node name="XRControllerLeft" type="XRController3D" parent="XROrigin3D"]
+visible = false
+tracker = &"left_hand"
+
+[node name="MeshInstance3D" type="MeshInstance3D" parent="XROrigin3D/XRControllerLeft"]
+transform = Transform3D(0.1, 0, 0, 0, 0.1, 0, 0, 0, 0.1, 0, 0, 0)
+mesh = SubResource("SphereMesh_4qtyj")
+
+[node name="OpenXRHandRight" type="OpenXRHand" parent="XROrigin3D"]
+hand = 1
+hand_skeleton = NodePath("hand_r/Armature/Skeleton3D")
+script = ExtResource("2_6fxvw")
+add_collider_to = 34636832
+
+[node name="hand_r" parent="XROrigin3D/OpenXRHandRight" instance=ExtResource("1_rtu1f")]
+
+[node name="mesh_Hand_L" parent="XROrigin3D/OpenXRHandRight/hand_r/Armature/Skeleton3D" index="0"]
+material_override = ExtResource("2_dbqgo")
+
+[node name="OpenXRHandLeft" type="OpenXRHand" parent="XROrigin3D"]
+hand_skeleton = NodePath("hand_l/Armature/Skeleton3D")
+script = ExtResource("2_6fxvw")
+
+[node name="hand_l" parent="XROrigin3D/OpenXRHandLeft" instance=ExtResource("2_q7dcu")]
+
+[node name="mesh_Hand_L" parent="XROrigin3D/OpenXRHandLeft/hand_l/Armature/Skeleton3D" index="0"]
+material_override = ExtResource("2_dbqgo")
+
+[editable path="XROrigin3D/OpenXRHandRight/hand_r"]
+[editable path="XROrigin3D/OpenXRHandLeft/hand_l"]
