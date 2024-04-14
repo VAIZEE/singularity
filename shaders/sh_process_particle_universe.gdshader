@@ -3,10 +3,16 @@ shader_type particles;
 
 uniform vec3 origin;
 uniform float start_time;
+uniform float expansion_speed_factor;
 
 const float G = 6.67430e-11;
 const float black_holes_formed_value = -1.0;
+const float atracted_by_black_hole = -2.0;
+const float has_ended = -2.0;
 const float universe_spin_factor = 8.0;
+
+const float TRUE = 1.0;
+const float FALSE = 0.0;
 
 //function for random value
 float rand_from_seed(in uint seed) {
@@ -58,48 +64,61 @@ vec3 random_velocity_in_sphere(uint number, uint random_seed) {
 }
 
 
-
 // Called when a particle is spawned.
 void start() {
-
-	VELOCITY = random_velocity_in_sphere(NUMBER, RANDOM_SEED);
+	VELOCITY = random_velocity_in_sphere(NUMBER, RANDOM_SEED) * expansion_speed_factor;
 	TRANSFORM[3].xyz = origin;
-	CUSTOM.xyz = vec3(10.0, 1.0, 0.0);
+	CUSTOM.xyzw = vec4(1.0, 1.0, 0.0, 0.0);
 }
 
 // Called every frame on existing particles (according to the Fixed FPS property).
 void process() {
 	//Calculate runtime of shader programm
 	float runtime = TIME - start_time;
+	float time_left = LIFETIME - runtime;
+	bool end_time_reached = time_left < 2.0;
 	
+	if(time_left <= 0.0) {
+		ACTIVE = false;
+	}
+
 	if(INDEX == uint(0)){
 		//If need code once each rotation
 	}
+	CUSTOM.z = length(ATTRACTOR_FORCE);
 	
-
+	
+	if(CUSTOM.z != has_ended && end_time_reached) {
+		vec3 dir = origin - TRANSFORM[3].xyz;
+		VELOCITY = normalize(dir) * LIFETIME;
+		CUSTOM.z = has_ended;
+	}
+	
 	//When Stars/Black Holes start forming
-	if(runtime > 2.0) {
+	if(runtime > 2.0 && !end_time_reached) {
 		
 		//Once per Simulation
 		if(CUSTOM.x != black_holes_formed_value) {
 			CUSTOM.x = black_holes_formed_value;
-			VELOCITY = vec3(0);
-			
-			//If in range of attraktor apply rotation
-			if(length(ATTRACTOR_FORCE) > 0.0) {
-				vec3 dir_origin = ATTRACTOR_FORCE;
-				dir_origin.y = 0.0;
-				dir_origin = normalize(dir_origin);
-				VELOCITY += normalize(cross(dir_origin, vec3(0,1,0))) * universe_spin_factor * DELTA;
-			}
+			//VELOCITY = vec3(0);
+		}
+		
+		//If gets in range of atractor apply rotation
+		if(length(ATTRACTOR_FORCE) > 0.0 && CUSTOM.y != atracted_by_black_hole){
+			CUSTOM.y = atracted_by_black_hole;
+			vec3 dir_origin = ATTRACTOR_FORCE;
+			dir_origin.y = 0.0;
+			dir_origin = normalize(dir_origin);
+			VELOCITY += normalize(cross(dir_origin, vec3(0,1,0))) * universe_spin_factor * DELTA;
 		}
 		
 		// Only if in attracktor range execute this line to safe execution
 		if(length(ATTRACTOR_FORCE) > 0.0){
+			
 			VELOCITY += ATTRACTOR_FORCE * DELTA;
 		}
 	} 
-	
+
 	//General Update
 	TRANSFORM[3].xyz += VELOCITY * DELTA;
 }

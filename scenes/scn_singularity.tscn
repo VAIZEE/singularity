@@ -1,4 +1,4 @@
-[gd_scene load_steps=11 format=3 uid="uid://0xebqcpe12oh"]
+[gd_scene load_steps=12 format=3 uid="uid://0xebqcpe12oh"]
 
 [ext_resource type="Script" path="res://scripts/sc_singularity.gd" id="1_o14by"]
 [ext_resource type="PackedScene" uid="uid://cfhyarpcrwkkn" path="res://scenes/scn_xr_button.tscn" id="3_klkv0"]
@@ -16,9 +16,11 @@ emission = Color(1, 1, 1, 1)
 [sub_resource type="SphereMesh" id="SphereMesh_k0cga"]
 material = SubResource("StandardMaterial3D_kjruy")
 
+[sub_resource type="Sky" id="Sky_ophsn"]
+
 [sub_resource type="Environment" id="Environment_hycrc"]
-background_mode = 1
-background_energy_multiplier = 0.0
+background_mode = 2
+sky = SubResource("Sky_ophsn")
 ambient_light_color = Color(0.621454, 0.0214422, 0.685437, 1)
 reflected_light_source = 1
 
@@ -138,3 +140,7 @@ transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0, 18.6732)
 
 [node name="DirectionalLight3D2" type="DirectionalLight3D" parent="StarLight"]
 transform = Transform3D(1, 0, 0, 0, -1, -8.74228e-08, 0, 8.74228e-08, -1, 0, 0, -20.9661)
+
+[node name="Camera3D" type="Camera3D" parent="."]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0, 0.0293661)
+near = 0.01

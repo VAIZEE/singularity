@@ -13,7 +13,8 @@ config_version=5
 config/name="VRParticleSim"
 run/main_scene="res://scenes/scn_main.tscn"
 config/features=PackedStringArray("4.3", "Forward Plus")
-config/icon="res://assets/image_assets/icons/icon.svg"
+config/icon="res://assets/image_assets/icons/grasping.png"
+config/windows_native_icon="res://assets/image_assets/icons/grasping.ico"
 
 [filesystem]
 
