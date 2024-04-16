@@ -15,7 +15,7 @@ var black_hole = preload("res://scenes/scn_black_hole.tscn")
 @export var STAR_COUNT : int = 3000000 #max for 90 fps was 5.000.000 rendered still
 @export var LIFE_TIME : int = 10
 @export var EXPANSION_SPEED_FACTOR : float = 1.0
-@export var BLACK_HOLE_COUNT : int = 5
+@export var BLACK_HOLE_COUNT : int = 0
 
 
 ###############################OnReady########################################

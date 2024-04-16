@@ -8,11 +8,12 @@ uniform float expansion_speed_factor;
 const float G = 6.67430e-11;
 const float black_holes_formed_value = -1.0;
 const float atracted_by_black_hole = -2.0;
-const float has_ended = -2.0;
+
 const float universe_spin_factor = 8.0;
 
 const float TRUE = 1.0;
 const float FALSE = 0.0;
+const float REVERSE_DURATION = 4.0;
 
 //function for random value
 float rand_from_seed(in uint seed) {
@@ -76,44 +77,43 @@ void process() {
 	//Calculate runtime of shader programm
 	float runtime = TIME - start_time;
 	float time_left = LIFETIME - runtime;
-	bool end_time_reached = time_left < 2.0;
+	bool start_reverse = time_left <= (REVERSE_DURATION);
+	bool time_over = time_left <= 0.0;
 	
-	if(time_left <= 0.0) {
-		ACTIVE = false;
-	}
-
 	if(INDEX == uint(0)){
 		//If need code once each rotation
 	}
 	CUSTOM.z = length(ATTRACTOR_FORCE);
 	
 	
-	if(CUSTOM.z != has_ended && end_time_reached) {
-		vec3 dir = origin - TRANSFORM[3].xyz;
-		VELOCITY = normalize(dir) * LIFETIME;
-		CUSTOM.z = has_ended;
-	}
 	
-	//When Stars/Black Holes start forming
-	if(runtime > 2.0 && !end_time_reached) {
+	if(start_reverse) {
+		vec3 dir = origin - TRANSFORM[3].xyz;
+		VELOCITY = dir * 4.0;
 		
+		if(length(dir) < 0.0001 || time_over) {
+			ACTIVE = false;
+		}
+		//When Stars/Black Holes start forming
+	} else if(runtime > 2.0) {
+		bool in_black_hole_range = length(ATTRACTOR_FORCE) > 0.0;
 		//Once per Simulation
-		if(CUSTOM.x != black_holes_formed_value) {
-			CUSTOM.x = black_holes_formed_value;
+		//if(CUSTOM.x != black_holes_formed_value) {
+			//CUSTOM.x = black_holes_formed_value;
 			//VELOCITY = vec3(0);
-		}
-		
-		//If gets in range of atractor apply rotation
-		if(length(ATTRACTOR_FORCE) > 0.0 && CUSTOM.y != atracted_by_black_hole){
-			CUSTOM.y = atracted_by_black_hole;
-			vec3 dir_origin = ATTRACTOR_FORCE;
-			dir_origin.y = 0.0;
-			dir_origin = normalize(dir_origin);
-			VELOCITY += normalize(cross(dir_origin, vec3(0,1,0))) * universe_spin_factor * DELTA;
-		}
+		//}
 		
 		// Only if in attracktor range execute this line to safe execution
-		if(length(ATTRACTOR_FORCE) > 0.0){
+		if(in_black_hole_range){
+			
+			//If gets in range of atractor apply rotation
+			if(CUSTOM.y != atracted_by_black_hole) {
+				CUSTOM.y = atracted_by_black_hole;
+				vec3 dir_origin = ATTRACTOR_FORCE;
+				dir_origin.y = 0.0;
+				dir_origin = normalize(dir_origin);
+				VELOCITY += normalize(cross(dir_origin, vec3(0,1,0))) * universe_spin_factor * DELTA;
+			}
 			
 			VELOCITY += ATTRACTOR_FORCE * DELTA;
 		}
