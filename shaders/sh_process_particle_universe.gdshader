@@ -110,8 +110,9 @@ void process() {
 			ACTIVE = false;
 		}
 		//When Stars/Black Holes start forming
-	} else if(runtime > 2.0) {
-		bool in_black_hole_range = length(ATTRACTOR_FORCE) > 0.0;
+	} else if(runtime > 0.0) {
+		//bool in_black_hole_range = length(ATTRACTOR_FORCE) > 0.0;
+		bool in_black_hole_range = length(ATTRACTOR_FORCE) > 0.0 && ATTRACTOR_FORCE.y <= 0.1 && ATTRACTOR_FORCE.y >= -0.1;
 		//Once per Simulation
 		//if(CUSTOM.x != black_holes_formed_value) {
 			//CUSTOM.x = black_holes_formed_value;
@@ -129,8 +130,16 @@ void process() {
 				dir_origin = normalize(dir_origin);
 				VELOCITY += normalize(cross(dir_origin, vec3(0,1,0))) * ROTATION_SPEED * DELTA;
 			}
+			
+			vec3 force = ATTRACTOR_FORCE / CUSTOM.w;
+			//if(force.y > 0.1) {
+				//force.y += -0.2;
+			//} else if(force.y < -0.1) {
+				//force.y += 0.2;
+			//}
+			
 			//add force to velocity in concideration of bodies mass and frame time
-			VELOCITY += ATTRACTOR_FORCE / CUSTOM.w * DELTA;
+			VELOCITY += force * DELTA;
 		}
 	} 
 

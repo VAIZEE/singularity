@@ -12,10 +12,10 @@ var black_hole = preload("res://scenes/scn_black_hole.tscn")
 
 ###############################Exports########################################
 @export var SIZE : int = 1000
-@export var STAR_COUNT : int = 3000000 #max for 90 fps was 5.000.000 rendered still
+@export var STAR_COUNT : int = 300000 #max for 90 fps was 5.000.000 rendered still
 @export var LIFE_TIME : int = 40
 @export var EXPANSION_SPEED_FACTOR : float = 1.0
-@export var BLACK_HOLE_COUNT : int = 1
+@export var BLACK_HOLE_COUNT : int = 10
 
 
 ###############################OnReady########################################
@@ -94,6 +94,7 @@ func create_universe(lifetime, star_count):
 	particles_3d_gpu.amount = star_count
 	particles_3d_gpu.visibility_aabb = AABB(Vector3(-SIZE/2,-SIZE/2,-SIZE/2), Vector3(SIZE,SIZE,SIZE))
 	
+	#Create BLACK_HOLE_COUNT black hole scene instances
 	create_black_holes(particles_3d_gpu)
 	
 	return particles_3d_gpu

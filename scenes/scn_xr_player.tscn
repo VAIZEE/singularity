@@ -46,6 +46,7 @@ material_override = ExtResource("2_dbqgo")
 [node name="OpenXRHandLeft" type="OpenXRHand" parent="XROrigin3D"]
 hand_skeleton = NodePath("hand_l/Armature/Skeleton3D")
 script = ExtResource("2_6fxvw")
+add_collider_to = 34636832
 
 [node name="hand_l" parent="XROrigin3D/OpenXRHandLeft" instance=ExtResource("2_q7dcu")]
 

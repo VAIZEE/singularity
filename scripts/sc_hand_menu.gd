@@ -25,6 +25,7 @@ func on_pause_pressed():
 	pause.emit()
 
 func on_exit_pressed():
+	print("EXIT")
 	quit_game()
 
 func on_restart_pressed():
