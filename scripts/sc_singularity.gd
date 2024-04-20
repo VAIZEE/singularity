@@ -13,9 +13,9 @@ var black_hole = preload("res://scenes/scn_black_hole.tscn")
 ###############################Exports########################################
 @export var SIZE : int = 1000
 @export var STAR_COUNT : int = 3000000 #max for 90 fps was 5.000.000 rendered still
-@export var LIFE_TIME : int = 10
+@export var LIFE_TIME : int = 40
 @export var EXPANSION_SPEED_FACTOR : float = 1.0
-@export var BLACK_HOLE_COUNT : int = 0
+@export var BLACK_HOLE_COUNT : int = 1
 
 
 ###############################OnReady########################################
@@ -36,18 +36,6 @@ func _ready():
 	
 	#Connect press to start trigger
 	singularity.pressed.connect(start_simulation)
-
-func _physics_process(delta):
-	if(!singularity.visible):
-		var b_holes = get_tree().get_nodes_in_group("black_holes")
-		for b_hole in b_holes:
-			for other_hole in b_holes:
-				if(b_hole != other_hole):
-					b_hole.apply_force_from(other_hole, delta)	
-		
-		for b_hole in b_holes:
-			b_hole.global_position += b_hole.velocity * delta * EXPANSION_SPEED_FACTOR
-	pass
 
 func _exit_tree():
 	pass
@@ -116,6 +104,7 @@ func delete_universe(universe):
 func create_black_holes(universe):
 	for black_hole_idx in range(0, BLACK_HOLE_COUNT):
 		var b_hole = black_hole.instantiate()
+		b_hole.expansion_speed_factor = EXPANSION_SPEED_FACTOR
 		universe.add_child(b_hole)
 
 

@@ -3,17 +3,18 @@ shader_type particles;
 
 uniform vec3 origin;
 uniform float start_time;
-uniform float expansion_speed_factor;
+uniform float expansion_speed_factor = 1.0;
 
-const float G = 6.67430e-11;
+
 const float black_holes_formed_value = -1.0;
 const float atracted_by_black_hole = -2.0;
 
-const float universe_spin_factor = 8.0;
-
-const float TRUE = 1.0;
-const float FALSE = 0.0;
+const float ROTATION_SPEED = 8.0;
 const float REVERSE_DURATION = 4.0;
+const float REVERSE_SPEED = 4.0;
+const float G = 6.67430e-11;
+const float MAX_MASS = 10.0;
+const float MAX_SIZE = 3.0;
 
 //function for random value
 float rand_from_seed(in uint seed) {
@@ -67,9 +68,23 @@ vec3 random_velocity_in_sphere(uint number, uint random_seed) {
 
 // Called when a particle is spawned.
 void start() {
-	VELOCITY = random_velocity_in_sphere(NUMBER, RANDOM_SEED) * expansion_speed_factor;
+	//Set particle position to the given origin
 	TRANSFORM[3].xyz = origin;
-	CUSTOM.xyzw = vec4(1.0, 1.0, 0.0, 0.0);
+	
+	//Give the Particle a random velocity out of evenly distributed pool of possibilities
+	VELOCITY = random_velocity_in_sphere(NUMBER, RANDOM_SEED) * expansion_speed_factor;
+	
+	//Initializ the custom vector to be just zeros
+	CUSTOM.xyzw = vec4(0.0);
+	
+	//Get random value from 0 - 1 for further interpolation purposes
+	float random_0_1 = rand_from_seed(hash(NUMBER + uint(72) + RANDOM_SEED));
+	
+	//Linearly Interpolated random mass from 1 to MAX_MASS
+	CUSTOM.w = mix(1.0, MAX_MASS, random_0_1);
+	
+	//Linearly Interpolated random size from 1 to 3
+	CUSTOM.x = mix(1.0, MAX_SIZE, random_0_1);
 }
 
 // Called every frame on existing particles (according to the Fixed FPS property).
@@ -89,7 +104,7 @@ void process() {
 	
 	if(start_reverse) {
 		vec3 dir = origin - TRANSFORM[3].xyz;
-		VELOCITY = dir * 4.0;
+		VELOCITY = dir * REVERSE_SPEED;
 		
 		if(length(dir) < 0.0001 || time_over) {
 			ACTIVE = false;
@@ -112,10 +127,10 @@ void process() {
 				vec3 dir_origin = ATTRACTOR_FORCE;
 				dir_origin.y = 0.0;
 				dir_origin = normalize(dir_origin);
-				VELOCITY += normalize(cross(dir_origin, vec3(0,1,0))) * universe_spin_factor * DELTA;
+				VELOCITY += normalize(cross(dir_origin, vec3(0,1,0))) * ROTATION_SPEED * DELTA;
 			}
-			
-			VELOCITY += ATTRACTOR_FORCE * DELTA;
+			//add force to velocity in concideration of bodies mass and frame time
+			VELOCITY += ATTRACTOR_FORCE / CUSTOM.w * DELTA;
 		}
 	} 
 

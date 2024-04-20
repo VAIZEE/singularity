@@ -28,6 +28,10 @@ xr_buttons=""
 singularity=""
 black_holes=""
 
+[rendering]
+
+scaling_3d/scale=2.0
+
 [xr]
 
 openxr/enabled=true
